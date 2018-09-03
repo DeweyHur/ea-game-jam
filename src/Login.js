@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { TextField, Button } from '../node_modules/react-md';
+import { TextField, Button } from 'react-md';
+import './Login.css';
 
 export default class extends Component {
   constructor(props) {
@@ -14,16 +15,36 @@ export default class extends Component {
   }
 
   handleSubmit(event) {
-    window.sessionStorage.setItem("EAGameJamAccount", this.state.value);
+    window.sessionStorage.setItem("EAGameJamAccount", this.state.value.split('@')[0]);
   }
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <TextField id="floating-id" label="EA Account" type="email" placeholder="test@ea.com" className="md-cell md-cell--bottom" onChange={this.handleChange} />
-        <TextField id="floating-password" label="Enter your password" type="password" className="md-cell md-cell--bottom" />
-        <Button className="md-cell-left" type="submit">Log in</Button>
-      </form>
+      <div className="Login">
+        <h1 className="Login-header">EA GameJam 2018</h1>
+        <form onSubmit={this.handleSubmit}>
+          <TextField required
+            id="floating-id"
+            label="EA Account"
+            type="email"
+            placeholder="test@ea.com"
+            className="username md-cell md-cell--bottom"            
+            onChange={this.handleChange}
+          />
+          <TextField required
+            id="floating-password"
+            label="Enter your password"
+            type="password"
+            className="password md-cell md-cell--bottom"
+          />
+          <Button flat primary
+            className="md-cell-center"
+            type="submit"
+          >
+            Log in
+          </Button>
+        </form>
+      </div>
     );
   }
 }
