@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import Home from './Home';
+import Main from './Main';
 import Login from './Login';
+import { BrowserRouter } from 'react-router-dom';
 import registerServiceWorker from './registerServiceWorker';
 import WebFontLoader from 'webfontloader';
+
+import './index.css';
 
 WebFontLoader.load({
   google: {
@@ -14,7 +16,9 @@ WebFontLoader.load({
 
 const account = window.sessionStorage.getItem("EAGameJamAccount");
 const root = account ? (
-  <Home account={account} />
+  <BrowserRouter>
+    <Main account={account} />
+  </BrowserRouter>
 ) : (
   <Login />
 );

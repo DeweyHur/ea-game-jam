@@ -21,14 +21,16 @@ export default class extends Component {
   render() {
     return (
       <div className="Login">
-        <h1 className="Login-header">EA GameJam 2018</h1>
-        <form onSubmit={this.handleSubmit}>
+        <div className="Login-image">
+          <img src="login.PNG" alt="EA GameJam 2018" />
+        </div>
+        <form className="Login-form" onSubmit={this.handleSubmit}>
           <TextField required
             id="floating-id"
             label="EA Account"
             type="email"
             placeholder="test@ea.com"
-            className="username md-cell md-cell--bottom"            
+            className="username md-cell md-cell--bottom"
             onChange={this.handleChange}
           />
           <TextField required
@@ -36,9 +38,9 @@ export default class extends Component {
             label="Enter your password"
             type="password"
             className="password md-cell md-cell--bottom"
-          />
+          />          
           <Button flat primary
-            className="md-cell-center"
+            className="login md-cell-center"
             type="submit"
           >
             Log in
