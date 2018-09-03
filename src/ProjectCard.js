@@ -1,20 +1,36 @@
+import "./ProjectCard.css";
+
 import React, { Component } from 'react';
-import { Card, CardTitle, CardText, Media, MediaOverlay, Button, CardActions } from 'react-md';
+import { Card, CardTitle, CardText, Media, MediaOverlay, Button, CardActions, DialogContainer } from 'react-md';
 
 export default class extends Component {
+  state = { popupVisible: false }
+
+  constructor() {
+    super();
+    this.hideConfirmPopup = this.hideConfirmPopup.bind(this);
+  }
+
+  hideConfirmPopup() {
+    this.setState({ ...this.state, popupVisible: false })
+  }
+
   render() {
+    const { popupVisible } = this.state;
+    const title = 'FIFA Tactics';
+
     return (
-      <Card className="md-block-centered">
+      <Card className="ProjectCard md-cell md-cell--6 md-cell--8-tablet">
         <Media>
           <img src="http://www.fifplay.com/img/public/fifa-mobile-tactics.jpg" alt="FIFA Tactics" />
           <MediaOverlay>
-            <CardTitle title="FIFA Tactics" subtitle="by Dewey Hur">
+            <CardTitle title={title} subtitle="by Dewey Hur">
               <Button className="md-cell--right" icon>favorite</Button>
             </CardTitle>
           </MediaOverlay>
         </Media>
         <CardActions expander>
-          <Button className="md-cell-left" icon>how_to_vote</Button>
+          <Button className="md-cell-left" icon onClick={() => this.setState({ ...this.state, popupVisible: true })}>how_to_vote</Button>
           <Button className="md-cell-left" icon>comment</Button>
         </CardActions>
         <CardText expandable>
@@ -33,6 +49,17 @@ export default class extends Component {
       risus velit eu sapien. Nunc vitae pellentesque nisl.
                 </p>
         </CardText>
+        <DialogContainer
+          id="confirmVote"
+          visible={popupVisible}
+          onHide={this.hideConfirmPopup}
+          actions={[
+            <Button flat onClick={this.hideConfirmPopup}>Not Now</Button>,
+            <Button flat primary onClick={this.hideConfirmPopup}>Vote up !!</Button>      
+          ]}
+        >
+          <p>Do you want to vote <strong>{title}</strong> up?</p>
+        </DialogContainer>
       </Card>
     );
   }
