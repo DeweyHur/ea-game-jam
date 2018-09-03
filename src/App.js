@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { NavigationDrawer } from 'react-md';
-import logo from './logo.svg';
+import ProjectCard from './ProjectCard';
 import './App.css';
 
 class App extends Component {
   render() {
+    const cards = Array.from(new Array(4), (_, index) => <ProjectCard />);
     return (
       <NavigationDrawer
         drawerTitle="react-md with CRA"
-        toolbarTitle="Welcome to react-md"
+        toolbarTitle="EA GameJam 2018"
       >
         <div className="App">
           <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
+            <h1 className="App-title">EA Game Projects</h1>
           </header>
-          <p className="App-intro">
-            To get started, edit <code>src/App.js</code> and save to reload.
-          </p>
+          <div className="App-intro">
+            {cards}
+          </div>
         </div>
       </NavigationDrawer>
     );
@@ -25,3 +25,4 @@ class App extends Component {
 }
 
 export default App;
+
