@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import Home from './Home';
+import Login from './Login';
 import registerServiceWorker from './registerServiceWorker';
 import WebFontLoader from 'webfontloader';
 
@@ -11,5 +12,12 @@ WebFontLoader.load({
   },
 });
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const account = window.sessionStorage.getItem("EAGameJamAccount");
+const root = account ? (
+  <Home account={account} />
+) : (
+  <Login />
+);
+
+ReactDOM.render(root, document.getElementById('root'));
 registerServiceWorker();

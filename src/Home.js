@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { NavigationDrawer } from 'react-md';
 import ProjectCard from './ProjectCard';
-import './App.css';
+import './Home.css';
 
-class App extends Component {
+export default class extends Component {
   render() {
     const cards = Array.from(new Array(4), (_, index) => <ProjectCard />);
     return (
       <NavigationDrawer
-        drawerTitle="react-md with CRA"
+        drawerTitle={`Welcome, ${this.props.account}`}
         toolbarTitle="EA GameJam 2018"
       >
         <div className="App">
@@ -23,6 +23,3 @@ class App extends Component {
     );
   }
 }
-
-export default App;
-
