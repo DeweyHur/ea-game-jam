@@ -16,3 +16,12 @@
 .Home-intro {
   font-size: large;
 }
+
+.Home-filter {
+  padding: 20px;
+  text-align: left;
+
+  .chip {
+    margin-right: 5px;
+  }
+}
