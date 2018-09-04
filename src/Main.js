@@ -15,7 +15,7 @@ const Navs = [
 ]
 
 class Main extends Component {
-  state = { visible: false, nav: Navs[1] }
+  state = { visible: false, nav: Navs[0] }
 
   render() {
     const { account, location } = this.props;
@@ -39,6 +39,7 @@ class Main extends Component {
           className="md-toolbar-relative md-grid"
         >
           <Switch key={location.pathname}>
+            <Route exact path="/" component={About} />
             <Route path="/home" component={Home} />
             <Route path="/about" component={About} />
           </Switch>
