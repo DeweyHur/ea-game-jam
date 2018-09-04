@@ -1,7 +1,7 @@
 import "./SideMenu.css";
 
 import React, { Component } from 'react';
-import { Button, Avatar, IconSeparator } from 'react-md';
+import { Button, Avatar, IconSeparator, Divider } from 'react-md';
 
 export default class extends Component {
   render() {
@@ -13,7 +13,7 @@ export default class extends Component {
             {account.charAt(0).toUpperCase()}
           </Avatar>
         </IconSeparator>
-        <hr />
+        <Divider />
         <p>
           Welcome, {this.props.account}
         </p>
