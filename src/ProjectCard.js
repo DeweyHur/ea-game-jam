@@ -17,12 +17,12 @@ export default class extends Component {
 
   render() {
     const { popupVisible } = this.state;
-    const { work: { title, authors, category } } = this.props;
+    const { image, work: { title, authors, category } } = this.props;
 
     return (
       <Card className="ProjectCard md-cell md-cell--6 md-cell--8-tablet">
         <Media>
-          <img src="http://www.fifplay.com/img/public/fifa-mobile-tactics.jpg" alt="FIFA Tactics" />
+          <img src={image} alt={title} />
           <MediaOverlay>
             <CardTitle title={title} subtitle={`by ${authors[0]} +${authors.length}`}>
               <Button className="md-cell--right" flat>{category}</Button>

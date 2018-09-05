@@ -43,7 +43,10 @@ export default class extends Component {
     const filtersByCategory = _.groupBy(selectedStates, 'category');
     const cards = WorksData
       .filter(work => _.values(filtersByCategory).every(filters => filters.some(data => data.filter(work))))
-      .map(work => <ProjectCard work={work} />);
+      .map((work, index) => <ProjectCard 
+        image={`https://api.thecatapi.com/v1/images/search?category_ids=${Math.floor(Math.random() * 6) + 1}&format=src&mime_types=image/gif&api_key=71160d68-1a0e-4b9f-971f-ca1020ba4bce`} 
+        work={work} 
+      />);
     const chips = selectedStates.map(filter => <Chip removable
       className="chip"
       key={filter.label}
