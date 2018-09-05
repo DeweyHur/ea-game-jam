@@ -31,7 +31,6 @@ export default class extends Component {
         </Media>
         <CardActions expander>
           <Button className="md-cell-left" icon onClick={() => this.setState({ ...this.state, popupVisible: true })}>how_to_vote</Button>
-          <Button className="md-cell-left" icon>comment</Button>
         </CardActions>
         <CardText expandable>
           <h2>{title}</h2>

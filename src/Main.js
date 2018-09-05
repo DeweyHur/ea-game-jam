@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Toolbar, Button, Drawer, ListItem, FontIcon } from 'react-md';
+import { Badge, ListItem, FontIcon, NavigationDrawer, Button, Avatar } from 'react-md';
 import CSSTransitionGroup from 'react-transition-group/CSSTransition';
-import { Link, Route, Switch } from 'react-router-dom';
-import { withRouter } from 'react-router';
+import { Link, Route, Switch, Redirect } from 'react-router-dom';
 import Home from './Home';
 import About from './About';
 import SideMenu from './SideMenu';
@@ -14,42 +13,40 @@ const Navs = [
   { to: "/home", label: "Participants", icon: "home" },
 ]
 
-class Main extends Component {
+export default class extends Component {
   state = { visible: false, nav: Navs[0] }
 
+  componentDidMount() {
+    this.badge = document.getElementById('account-badge-toggle');
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { visible } = this.state;
+    if (visible === prevState.visible) {
+      return;
+    }
+
+    window[`${visible ? 'add' : 'remove'}EventListener`]('click', this.handleOutsideClick);    
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('click', this.handleOutsideClick);
+  }
+
+  handleOutsideClick = (e) => {
+    if (!this.badge || !this.badge.contains(e.target)) {
+      this.setState({ ...this.state, visible: false });
+    }
+  };  
+
   render() {
-    const { account, location } = this.props;
-    const { nav } = this.state;
+    const { account } = this.props;
+    const { nav, visible } = this.state;
+
     return (
       <div className="Home" id="drawer-dialog">
-        <Toolbar colored
-          nav={
-            <Button icon
-              onClick={() => this.setState({ ...this.state, visible: true })}>
-              menu
-        </Button>
-          }
-          title={nav.label}
-        />
-        <CSSTransitionGroup
-          component="div"
-          transitionName="md-cross-fade"
-          transitionEnterTimeout={300}
-          transitionLeave={false}
-          className="md-toolbar-relative md-grid"
-        >
-          <Switch key={location.pathname}>
-            <Route exact path="/" component={About} />
-            <Route path="/home" component={Home} />
-            <Route path="/about" component={About} />
-          </Switch>
-        </CSSTransitionGroup>
-        <Drawer
-          type={Drawer.DrawerTypes.TEMPORARY}
-          visible={this.state.visible}
-          onVisibilityChange={visible => this.setState({ ...this.state, visible })}
-          header={<SideMenu account={account} />}
-          renderNode={document.getElementById('drawer-dialog')}
+        <NavigationDrawer
+          navStyle={({ textAlign: "left" })}
           navItems={Navs.map(nav => {
             const { to, label, icon } = nav;
             return (
@@ -66,10 +63,37 @@ class Main extends Component {
               </Route>
             );
           })}
-        />
+          toolbarActions={
+            <Badge secondary aria-haspopup badgeContent={3} id="account-badge-toggle">
+              <Button onClick={() => this.setState({ ...this.state, visible: !visible })}>
+                <Avatar>{account.charAt(0).toUpperCase()}</Avatar>
+              </Button>
+              <SideMenu account={account} visible={visible} className="badges__notifications" />
+            </Badge>
+          }
+          drawerTitle={`EA GameJam 2018`}
+          mobileDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY_MINI}
+          tabletDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT_MINI}
+          desktopDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT_MINI}
+          toolbarTitle={nav.label}
+          contentId="main-content"
+          contentClassName="md-grid"
+        >
+          <CSSTransitionGroup
+            component="div"
+            transitionName="md-cross-fade"
+            transitionEnterTimeout={300}
+            transitionLeave={false}
+            className="md-toolbar-relative md-grid"
+          >
+            <Switch key={nav.to}>
+              <Route path="/home" component={Home} />
+              <Route path="/about" component={About} />
+              <Redirect from="/" exact to="/about" />
+            </Switch>
+          </CSSTransitionGroup>
+        </NavigationDrawer>
       </div>
     );
   }
 }
-
-export default withRouter(Main);

@@ -1,10 +1,13 @@
-import React from 'react';
-
 import "./About.css";
+
+import React from 'react';
+import { Media } from 'react-md';
 
 export default () => (
   <div className="About">
-    <img src="topbar.png" alt="EA GameJam 2018" />
+    <Media forceAspect={false} style={({ paddingBottom: "20%" })}>
+      <img src="topbar.png" alt="EA GameJam 2018" />
+    </Media>
     <p>
       Hello EAV,
     </p>
