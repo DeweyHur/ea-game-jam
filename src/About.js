@@ -8,59 +8,34 @@ export default () => (
     <Media forceAspect={false} style={({ paddingBottom: "20%" })}>
       <img src="topbar.png" alt="EA GameJam 2018" />
     </Media>
+    <h3>GAME JAM 2018 KICK-OFF IS HERE!</h3>
     <p>
-      Hello EAV,
+      It's time! You are invited to the official Game Jam 2018 Kick-off!
     </p>
     <p>
-      Show off Your Skills at the 3rd Annual EA Vancouver Game Jam!
+      Come on down to the Bigger Picture at 3PM on Wednesday, November 14th to officially kick off the 2018 Game Jam at EAV! The Game Jam Leadership team will walk all participants through science fair logistics, table assignments, tips and tricks, judging criteria and much more! We will also have Bryan Hayes, UFC Creative Director, presenting EA Player Segmentation research which will assist you in finding a player motivation for your creations!
     </p>
     <p>
-      Do you have an exciting concept for a new IP? How about an innovative idea for one of our existing franchises? Now's the time to show us!
+      <strong>There will also be Official Game Jam 2018 SWAG!!!</strong>
     </p>
-    <h3>Overview</h3>
     <p>
-      Game Jam is an opportunity for EAV employees to flex their creative muscles by working either individually or as part of a team to pitch new intellectual property, new game features or new technology/workflow/process.
-      Game Jam participants will show off their creations and ideas at a science fair style presentation where all EAV employees will have a chance to vote for their favourite ideas.
-      The finalists will have just over two weeks to hone their initial ideas and pitches before presenting to a judging panel at the Final event that will be held late November.
-    </p>
-    <h3>Game Jam 2017 Categories:</h3>
-    <ol>
-      <li><p>New Intellectual Property (New IP)</p></li>
-      <li><p>New Game Features Or Improved Technology, Workflows, Process New Game Features</p></li>
-    </ol>
-    <blockquote>
-      <p>
-        * We also encourage participants to think of features that could compliment the new Player Network initiatives that are building momentum throughout EA.
-        Pillars of the Player Network are as follows; Networked Social, Progression Support, Personalized Content, Identify the Player, Access Integration
-      </p>
-    </blockquote>
-    <h3>Key Dates:</h3>
+      If you have any questions, please email us at <a href="mailto:GameJamLeadership@ea.com">GameJamLeadership@ea.com</a> or leave a question in the Slack channel.
+    </p>    
+    <h3>Game Jam 2018 Dates:</h3>
     <dl>
-      <dt>October 12th</dt>
-      <dd>Information Kick off Session</dd>
-      <dt>November 1st</dt>
+      <dt>November 14th</dt>
       <dd>Kick off Meeting for all registered Game Jammers</dd>
-      <dt>November 2nd, 3rd</dt>
-      <dd>Teamswork on their ideas and projects</dd>
-      <dt>November 6th</dt>
-      <dd>Teams setup their presentations</dd>
-      <dt>November 7th</dt>
+      <dt>November 15-16th</dt>
+      <dd>Teams work on their ideas and projects</dd>
+      <dt>November 19th</dt>
+      <dd>Teams set up their presentations</dd>
+      <dt>November 20th</dt>
       <dd>Studio-wide "science fair" event</dd>
-      <dt>November 30th</dt>
-      <dd>Final Presentationsto Judges</dd>
+      <dt>December 5th</dt>
+      <dd>Final Presentations to Judges</dd>
     </dl>
-    <h3>Manager Approval</h3>
     <p>
-      All employees must have approval from their Direct manager in order to participate in this event before completing their registration via the online invite.
-    </p>
-    <p>
-      Registration closes Friday, October 20th.
-    </p>
-    <p>
-      Please reach out to the Game Jam Leadership team if you have any questions or concerns.
-    </p>
-    <p>
-      Cheers,<br />
+      Thanks,<br />
       The Game Jam Leadership Team
     </p>
   </div>
