@@ -17,7 +17,13 @@ export default class extends Component {
 
   render() {
     const { popupVisible } = this.state;
-    const { image, work: { title, authors, category } } = this.props;
+    const { image, work: { title, authors, category, likes } } = this.props;
+
+    const likesStatus = (likes === undefined) ? <div /> : (
+      <p>
+        Liked by {likes[0]} and {likes.length} others
+      </p>
+    );
 
     return (
       <Card className="ProjectCard md-cell md-cell--6 md-cell--8-tablet">
@@ -29,8 +35,10 @@ export default class extends Component {
             </CardTitle>
           </MediaOverlay>
         </Media>
+        {likesStatus}
         <CardActions expander>
           <Button className="md-cell-left" icon onClick={() => this.setState({ ...this.state, popupVisible: true })}>how_to_vote</Button>
+          <Button className="md-cell-left" icon>favorite_border</Button>
         </CardActions>
         <CardText expandable>
           <h2>{title}</h2>
