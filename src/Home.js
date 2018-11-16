@@ -67,7 +67,7 @@ export default class extends Component {
       ];
       this.setState({ ...this.state, projects, chips, filteredStates: chips });
     } catch (e) {
-      console.error(e.message());
+      console.error(e);
     }
   }
 
