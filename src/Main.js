@@ -1,23 +1,31 @@
-import React, { Component } from 'react';
-import { Badge, ListItem, FontIcon, NavigationDrawer, Button, Avatar } from 'react-md';
-import CSSTransitionGroup from 'react-transition-group/CSSTransition';
-import { Link, Route, Switch, Redirect } from 'react-router-dom';
-import Home from './Home';
-import About from './About';
-import SideMenu from './SideMenu';
+import "./Home.css";
 
-import './Home.css';
+import React, { Component } from "react";
+import {
+  Badge,
+  ListItem,
+  FontIcon,
+  NavigationDrawer,
+  Button,
+  Avatar
+} from "react-md";
+import CSSTransitionGroup from "react-transition-group/CSSTransition";
+import { Link, Route, Switch, Redirect } from "react-router-dom";
+import Home from "./Home";
+import About from "./About";
+import SideMenu from "./SideMenu";
+import { getChipName } from "./user";
 
 const Navs = [
   { to: "/about", label: "About", icon: "info" },
-  { to: "/home", label: "Participants", icon: "home" },
-]
+  { to: "/home", label: "Participants", icon: "home" }
+];
 
 export default class extends Component {
-  state = { visible: false, nav: Navs[0] }
+  state = { visible: false, nav: Navs[0] };
 
   componentDidMount() {
-    this.badge = document.getElementById('account-badge-toggle');
+    this.badge = document.getElementById("account-badge-toggle");
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -26,32 +34,35 @@ export default class extends Component {
       return;
     }
 
-    window[`${visible ? 'add' : 'remove'}EventListener`]('click', this.handleOutsideClick);    
+    window[`${visible ? "add" : "remove"}EventListener`](
+      "click",
+      this.handleOutsideClick
+    );
   }
 
   componentWillUnmount() {
-    window.removeEventListener('click', this.handleOutsideClick);
+    window.removeEventListener("click", this.handleOutsideClick);
   }
 
-  handleOutsideClick = (e) => {
+  handleOutsideClick = e => {
     if (!this.badge || !this.badge.contains(e.target)) {
       this.setState({ ...this.state, visible: false });
     }
-  };  
+  };
 
   render() {
-    const { user, reload } = this.props;
+    const { reload } = this.props;
     const { nav, visible } = this.state;
 
     return (
       <div className="Home" id="drawer-dialog">
         <NavigationDrawer
-          navStyle={({ textAlign: "left" })}
+          navStyle={{ textAlign: "left" }}
           navItems={Navs.map(nav => {
             const { to, label, icon } = nav;
             return (
               <Route path={to}>
-                {({ match }) =>
+                {({ match }) => (
                   <ListItem
                     component={Link}
                     active={!!match}
@@ -59,16 +70,30 @@ export default class extends Component {
                     primaryText={label}
                     leftIcon={<FontIcon>{icon}</FontIcon>}
                     onClick={() => this.setState({ ...this.state, nav })}
-                  />}
+                  />
+                )}
               </Route>
             );
           })}
           toolbarActions={
-            <Badge secondary aria-haspopup badgeContent={3} id="account-badge-toggle">
-              <Button onClick={() => this.setState({ ...this.state, visible: !visible })}>
-                <Avatar>{user.name.charAt(0).toUpperCase()}</Avatar>
+            <Badge
+              secondary
+              aria-haspopup
+              badgeContent={3}
+              id="account-badge-toggle"
+            >
+              <Button
+                onClick={() =>
+                  this.setState({ ...this.state, visible: !visible })
+                }
+              >
+                <Avatar>{getChipName()}</Avatar>
               </Button>
-              <SideMenu user={user} visible={visible} reload={reload} className="badges__notifications" />
+              <SideMenu
+                visible={visible}
+                reload={reload}
+                className="badges__notifications"
+              />
             </Badge>
           }
           drawerTitle={`EA GameJam 2018`}

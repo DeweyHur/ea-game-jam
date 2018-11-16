@@ -1,4 +1,3 @@
-import _ from "lodash";
 import React from "react";
 import ReactDOM from "react-dom";
 import Main from "./Main";
@@ -8,6 +7,7 @@ import registerServiceWorker from "./registerServiceWorker";
 import WebFontLoader from "webfontloader";
 
 import "./index.css";
+import { getMe } from "./user";
 
 WebFontLoader.load({
   google: {
@@ -15,14 +15,13 @@ WebFontLoader.load({
   }
 });
 
-function reload() {
-  const user = window.sessionStorage.getItem("EAGameJamUser");
-  const root = _.isEmpty(user) ? (
-    <Login reload={reload} />
-  ) : (
+function reload() {  
+  const root = getMe() ? (
     <BrowserRouter>
-      <Main user={JSON.parse(user)} reload={reload} />
+      <Main reload={reload} />
     </BrowserRouter>
+  ) : (
+    <Login reload={reload} />
   );
   ReactDOM.render(root, document.getElementById("root"));
 }

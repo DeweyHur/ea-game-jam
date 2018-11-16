@@ -9,11 +9,11 @@ import {
   IconSeparator,
   Divider
 } from "react-md";
-import http from "./fetch";
+import { logout, getName, getChipName } from "./user";
 
 export default class extends Component {
   render() {
-    const { user, visible, reload } = this.props;
+    const { visible, reload } = this.props;
 
     return (
       <Collapse collapsed={!visible}>
@@ -25,17 +25,17 @@ export default class extends Component {
         >
           <form>
             <IconSeparator
-              label={user.name}
+              label={getName()}
               iconBefore
               component="li"
               className="SideMenu-account md-cell md-cell--12"
             >
-              <Avatar random suffix={user.name}>
-                {user.name.charAt(0).toUpperCase()}
+              <Avatar random suffix={getName()}>
+                {getChipName()}
               </Avatar>
             </IconSeparator>
             <Divider />
-            <p>Welcome, {user.name}.</p>
+            <p>Welcome, {getName()}.</p>
             <p>
               You have <strong>3</strong> votes left.
             </p>
@@ -45,8 +45,7 @@ export default class extends Component {
               type="submit"
               onClick={() => {
                 (async () => {
-                  window.sessionStorage.removeItem("EAGameJamUser");
-                  await http.POST("/user/logout");
+                  await logout();
                   reload();
                 })();
               }}

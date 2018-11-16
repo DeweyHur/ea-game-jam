@@ -1,7 +1,8 @@
 import md5 from "crypto-js/md5";
 import React, { Component } from "react";
 import { Button, TextField } from "react-md";
-import http from "./fetch";
+import { login, signup } from "./user";
+
 import "./Login.css";
 
 export default class extends Component {
@@ -13,42 +14,23 @@ export default class extends Component {
 
   handleSubmit() {
     const { reload } = this.props;
-    const { signup, id, name, rawPassword } = this.state;
+    const { signingUp, id, name, rawPassword } = this.state;
     const password = md5(rawPassword).toString();
     const alias = id.split("@")[0];
     (async () => {
-      if (signup) {
-        try {
-          const user = await http.PUT(`/user/${alias}`, { name, password });
-          window.sessionStorage.setItem("EAGameJamUser", JSON.stringify(user));
-          reload();
-
-        } catch (e) {
-          window.sessionStorage.setItem(
-            "EAGameJamLoginError",
-            `${id} is already registered. Choose an another one.`
-          );
-        }
+      if (signingUp) {
+        await signup(alias, password, name);
       } else {
-        try {
-          const user = await http.POST(`/user/login`, { alias, password });
-          window.sessionStorage.setItem("EAGameJamUser", JSON.stringify(user));
-          reload();
-
-        } catch (e) {
-          window.sessionStorage.setItem(
-            "EAGameJamLoginError",
-            "No matched record. Sign up here."
-          );
-        }
+        await login(alias, password);
       }
+      reload();
     })();
   }
 
   render() {
-    const { signup } = this.state;
+    const { signingUp } = this.state;
 
-    const content = signup ? (
+    const content = signingUp ? (
       <div id="floating-form" className="Login-form">
         <Button
           flat
@@ -57,7 +39,7 @@ export default class extends Component {
           iconBefore={true}
           iconChildren="assignment"
           id="sign-up-button"
-          onClick={() => this.setState({ ...this.state, signup: false })}
+          onClick={() => this.setState({ ...this.state, signingUp: false })}
         >
           Sign up?
         </Button>
@@ -106,7 +88,7 @@ export default class extends Component {
           iconChildren="assignment"
           id="sign-up-button"
           onClick={() => {
-            this.setState({ ...this.state, signup: true });
+            this.setState({ ...this.state, signingUp: true });
           }}
         >
           Sign up?
