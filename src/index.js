@@ -1,27 +1,31 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import Main from './Main';
-import Login from './Login';
-import { BrowserRouter } from 'react-router-dom';
-import registerServiceWorker from './registerServiceWorker';
-import WebFontLoader from 'webfontloader';
+import _ from "lodash";
+import React from "react";
+import ReactDOM from "react-dom";
+import Main from "./Main";
+import Login from "./Login";
+import { BrowserRouter } from "react-router-dom";
+import registerServiceWorker from "./registerServiceWorker";
+import WebFontLoader from "webfontloader";
 
-import './index.css';
+import "./index.css";
 
 WebFontLoader.load({
   google: {
-    families: ['Roboto:300,400,500,700', 'Material Icons'],
-  },
+    families: ["Roboto:300,400,500,700", "Material Icons"]
+  }
 });
 
-const account = window.sessionStorage.getItem("EAGameJamAccount");
-const root = account ? (
-  <BrowserRouter>
-    <Main account={account} />
-  </BrowserRouter>
-) : (
-  <Login />
-);
+function reload() {
+  const user = window.sessionStorage.getItem("EAGameJamUser");
+  const root = _.isEmpty(user) ? (
+    <Login reload={reload} />
+  ) : (
+    <BrowserRouter>
+      <Main user={JSON.parse(user)} reload={reload} />
+    </BrowserRouter>
+  );
+  ReactDOM.render(root, document.getElementById("root"));
+}
 
-ReactDOM.render(root, document.getElementById('root'));
+reload();
 registerServiceWorker();

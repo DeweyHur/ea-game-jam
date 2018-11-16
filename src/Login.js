@@ -1,33 +1,45 @@
-import React, { Component } from 'react';
-import { TextField, Button } from 'react-md';
-import RESTful from './fetch';
-import './Login.css';
+import md5 from "crypto-js/md5";
+import React, { Component } from "react";
+import { Button, TextField } from "react-md";
+import http from "./fetch";
+import "./Login.css";
 
 export default class extends Component {
   constructor(props) {
     super(props);
-    this.state = { signup: false, id: '', name: '' };
+    this.state = { signup: false, id: "", name: "" };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(event) {
-    const { signup, id, name } = this.state;
-    const alias = id.split('@')[0];
+  handleSubmit() {
+    const { reload } = this.props;
+    const { signup, id, name, rawPassword } = this.state;
+    const password = md5(rawPassword).toString();
+    const alias = id.split("@")[0];
     (async () => {
       if (signup) {
         try {
-          const user = await RESTful.PUT(`/user/${alias}`, { name });
-          window.sessionStorage.setItem("EAGameJamAccount", user.name);
-        } catch (e) {
-          window.sessionStorage.setItem("EAGameJamLoginError", `${id} is already registered. Choose an another one.`);
-        }
+          const user = await http.PUT(`/user/${alias}`, { name, password });
+          window.sessionStorage.setItem("EAGameJamUser", JSON.stringify(user));
+          reload();
 
+        } catch (e) {
+          window.sessionStorage.setItem(
+            "EAGameJamLoginError",
+            `${id} is already registered. Choose an another one.`
+          );
+        }
       } else {
         try {
-          const user = await RESTful.GET(`/user/${alias}`);
-          window.sessionStorage.setItem("EAGameJamAccount", user.name);
+          const user = await http.POST(`/user/login`, { alias, password });
+          window.sessionStorage.setItem("EAGameJamUser", JSON.stringify(user));
+          reload();
+
         } catch (e) {
-          window.sessionStorage.setItem("EAGameJamLoginError", 'No matched record. Sign up here.');
+          window.sessionStorage.setItem(
+            "EAGameJamLoginError",
+            "No matched record. Sign up here."
+          );
         }
       }
     })();
@@ -36,9 +48,12 @@ export default class extends Component {
   render() {
     const { signup } = this.state;
 
-    const content = (signup) ? (
-      <form id="floating-form" className="Login-form" onSubmit={this.handleSubmit}>
-        <Button flat primary swapTheming
+    const content = signup ? (
+      <div id="floating-form" className="Login-form">
+        <Button
+          flat
+          primary
+          swapTheming
           iconBefore={true}
           iconChildren="assignment"
           id="sign-up-button"
@@ -46,7 +61,8 @@ export default class extends Component {
         >
           Sign up?
         </Button>
-        <TextField required
+        <TextField
+          required
           id="floating-id"
           label="EA Account"
           type="email"
@@ -54,52 +70,80 @@ export default class extends Component {
           className="username md-cell md-cell--bottom"
           onChange={id => this.setState({ ...this.state, id })}
         />
-        <TextField required
+        <TextField
+          required
+          id="floating-password"
+          label="Password"
+          type="password"
+          className="password md-cell md-cell--bottom"
+          onChange={rawPassword =>
+            this.setState({ ...this.state, rawPassword })
+          }
+        />
+        <TextField
+          required
           id="floating-name"
           label="Enter your Name"
           className="name md-cell md-cell--bottom"
           onChange={name => this.setState({ ...this.state, name })}
         />
-        <Button flat primary
+        <Button
+          flat
+          primary
           id="floating-submit"
           className="login md-cell-center"
-          type="submit"
+          onClick={() => this.handleSubmit()}
         >
           Sign up
         </Button>
-      </form>
+      </div>
     ) : (
-        <form id="floating-form" className="Login-form" onSubmit={this.handleSubmit}>
-          <Button flat primary
-            iconBefore={true}
-            iconChildren="assignment"
-            id="sign-up-button"
-            onClick={() => {
-              this.setState({ ...this.state, signup: true })
-            }}
-          >
-            Sign up?
-       </Button>
-          <TextField required
-            id="floating-id"
-            label="EA Account"
-            type="email"
-            placeholder="test@ea.com"
-            className="username md-cell md-cell--bottom"
-            onChange={id => this.setState({ ...this.state, id })}
-          />
-          <Button flat primary
-            id="floating-submit"
-            className="login md-cell-center"
-            type="submit"
-          >
-            Log in
+      <div id="floating-form" className="Login-form">
+        <Button
+          flat
+          primary
+          iconBefore={true}
+          iconChildren="assignment"
+          id="sign-up-button"
+          onClick={() => {
+            this.setState({ ...this.state, signup: true });
+          }}
+        >
+          Sign up?
         </Button>
-        </form>
-      );
+        <TextField
+          required
+          id="floating-id"
+          label="EA Account"
+          type="email"
+          placeholder="test@ea.com"
+          className="username md-cell md-cell--bottom"
+          onChange={id => this.setState({ ...this.state, id })}
+        />
+        <TextField
+          required
+          id="floating-password"
+          label="Password"
+          type="password"
+          className="password md-cell md-cell--bottom"
+          onChange={rawPassword =>
+            this.setState({ ...this.state, rawPassword })
+          }
+        />
+        <Button
+          flat
+          primary
+          id="floating-submit"
+          className="login md-cell-center"
+          onClick={() => this.handleSubmit()}
+        >
+          Log in
+        </Button>
+      </div>
+    );
 
     const loginError = window.sessionStorage.getItem("EAGameJamLoginError");
-    window.sessionStorage.setItem("EAGameJamLoginError", '');
+    window.sessionStorage.setItem("EAGameJamLoginError", "");
 
     return (
       <div className="Login">

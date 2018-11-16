@@ -40,7 +40,7 @@ export default class extends Component {
   };  
 
   render() {
-    const { account } = this.props;
+    const { user, reload } = this.props;
     const { nav, visible } = this.state;
 
     return (
@@ -66,9 +66,9 @@ export default class extends Component {
           toolbarActions={
             <Badge secondary aria-haspopup badgeContent={3} id="account-badge-toggle">
               <Button onClick={() => this.setState({ ...this.state, visible: !visible })}>
-                <Avatar>{account.charAt(0).toUpperCase()}</Avatar>
+                <Avatar>{user.name.charAt(0).toUpperCase()}</Avatar>
               </Button>
-              <SideMenu account={account} visible={visible} className="badges__notifications" />
+              <SideMenu user={user} visible={visible} reload={reload} className="badges__notifications" />
             </Badge>
           }
           drawerTitle={`EA GameJam 2018`}
