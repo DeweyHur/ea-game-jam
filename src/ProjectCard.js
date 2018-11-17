@@ -12,43 +12,43 @@ import {
   CardActions,
   DialogContainer
 } from "react-md";
-import { getMe } from "./user";
+import { getMyAlias } from "./user";
 import http from "./fetch";
 
 export default class extends Component {
-  state = { popupVisible: false };
-
-  constructor() {
+  constructor(props) {
     super();
     this.hideConfirmPopup = this.hideConfirmPopup.bind(this);
-  }
-
-  componentWillMount() {
-    this.setState({ ...this.state, likes: this.props.work.likes });
+    this.state = { popupVisible: false, work: props.work };
   }
 
   hideConfirmPopup() {
     this.setState({ ...this.state, popupVisible: false });
   }
 
+  componentWillReceiveProps(props) {
+    this.setState({ popupVisible: false, work: props.work });
+  }
+
   async toggleLike() {
     const {
-      work: { _id }
-    } = this.props;
-    const { likes } = this.state;
-    if (likes.indexOf(getMe()._id) === -1) {
-      await http.PUT(`/project/${_id}/like`);
+      work: { _id, likes }
+    } = this.state;
+    if (likes.indexOf(getMyAlias()) === -1) {
+      const work = await http.PUT(`/project/${_id}/like`);
+      this.setState({ work });
     } else {
-      await http.DELETE(`/project/${_id}/like`);
+      const work = await http.DELETE(`/project/${_id}/like`);
+      this.setState({ work });
     }
   }
 
   render() {
-    const { popupVisible, likes } = this.state;
     const {
-      image,
-      work: { _id, title, authors, category }
-    } = this.props;
+      popupVisible,
+      work: { _id, title, authors, category, likes }
+    } = this.state;
+    const { image } = this.props;
 
     const likesStatus = _.isEmpty(likes) ? (
       <div />
@@ -90,7 +90,9 @@ export default class extends Component {
             className="md-cell-left"
             onClick={() => (async () => this.toggleLike())()}
           >
-            {likes.indexOf(getMe()._id) === -1 ? "favorite_border" : "favorite"}
+            {likes.indexOf(getMyAlias()) === -1
+              ? "favorite_border"
+              : "favorite"}
           </Button>
         </CardActions>
         <CardText expandable>

@@ -20,6 +20,14 @@ export function getMe() {
   return me;
 }
 
+export function getMyAlias() {
+  if (me) {
+    return me.alias;
+  } else {
+    return null;
+  }
+}
+
 export function getName() {
   if (me) {
     return me.name;
