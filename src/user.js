@@ -8,6 +8,7 @@ export async function login(alias, password) {
 
 export async function signup(alias, password, name) {
   saveUser(await http.PUT(`/user/${alias}`, { name, password }));
+  await login(alias, password);
 }
 
 export async function logout() {

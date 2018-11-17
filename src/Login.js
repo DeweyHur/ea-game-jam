@@ -1,6 +1,6 @@
 import md5 from "crypto-js/md5";
 import React, { Component } from "react";
-import { Button, TextField } from "react-md";
+import { Button, TextField, CardText } from "react-md";
 import { login, signup } from "./user";
 
 import "./Login.css";
@@ -12,19 +12,16 @@ export default class extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit() {
+  async handleSubmit() {
     const { reload } = this.props;
     const { signingUp, id, name, rawPassword } = this.state;
     const password = md5(rawPassword).toString();
     const alias = id.split("@")[0];
-    (async () => {
-      if (signingUp) {
-        await signup(alias, password, name);
-      } else {
-        await login(alias, password);
-      }
-      reload();
-    })();
+    if (signingUp) {
+      await signup(alias, password, name);
+    }
+    await login(alias, password);        
+    reload();
   }
 
   render() {
@@ -45,6 +42,13 @@ export default class extends Component {
         </Button>
         <TextField
           required
+          id="floating-name"
+          label="Enter your Name"
+          className="name md-cell md-cell--bottom"
+          onChange={name => this.setState({ ...this.state, name })}
+        />
+        <TextField
+          required
           id="floating-id"
           label="EA Account"
           type="email"
@@ -62,25 +66,22 @@ export default class extends Component {
             this.setState({ ...this.state, rawPassword })
           }
         />
-        <TextField
-          required
-          id="floating-name"
-          label="Enter your Name"
-          className="name md-cell md-cell--bottom"
-          onChange={name => this.setState({ ...this.state, name })}
-        />
         <Button
           flat
           primary
           id="floating-submit"
           className="login md-cell-center"
-          onClick={() => this.handleSubmit()}
+          onClick={() => (async () => await this.handleSubmit())()}
         >
           Sign up
         </Button>
       </div>
     ) : (
       <div id="floating-form" className="Login-form">
+        <CardText>
+          ⓘ If it's your first time here, please SIGN UP first with your EA
+          Account, click below button! ⓘ
+        </CardText>
         <Button
           flat
           primary
