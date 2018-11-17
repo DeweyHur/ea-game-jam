@@ -132,7 +132,7 @@ export default class extends Component {
       <div className="Login">
         <p>{loginError}</p>
         <div className="Login-image">
-          <img src="login.PNG" alt="EA GameJam 2018" />
+          <img src="ea-game-jam-online.PNG" alt="EA GameJam 2018" />
         </div>
         {content}
       </div>

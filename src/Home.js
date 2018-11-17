@@ -85,13 +85,7 @@ export default class extends Component {
           )
         )
         .map((work, index) => (
-          <ProjectCard
-            image={`https://api.thecatapi.com/v1/images/search?category_ids=${Math.floor(
-              Math.random() * 6
-            ) +
-              1}&format=src&mime_types=image/gif&api_key=71160d68-1a0e-4b9f-971f-ca1020ba4bce`}
-            work={work}
-          />
+          <ProjectCard work={work} />
         ));
       const chipItems = selectedStates.map(filter => (
         <Chip

@@ -10,7 +10,11 @@ import {
   MediaOverlay,
   Button,
   CardActions,
-  DialogContainer
+  DialogContainer,
+  TextField,
+  List,
+  ListItem,
+  Avatar
 } from "react-md";
 import { getMyAlias } from "./user";
 import http from "./fetch";
@@ -18,16 +22,11 @@ import http from "./fetch";
 export default class extends Component {
   constructor(props) {
     super();
-    this.hideConfirmPopup = this.hideConfirmPopup.bind(this);
-    this.state = { popupVisible: false, work: props.work };
-  }
-
-  hideConfirmPopup() {
-    this.setState({ ...this.state, popupVisible: false });
+    this.state = { voteVisible: false, infoVisible: false, commentVisible: false, comments: [], work: props.work };
   }
 
   componentWillReceiveProps(props) {
-    this.setState({ popupVisible: false, work: props.work });
+    this.setState({ voteVisible: false, infoVisible: false, commentVisible: false, work: props.work });
   }
 
   async toggleLike() {
@@ -43,20 +42,43 @@ export default class extends Component {
     }
   }
 
+  async toggleComments() {
+    const { work: { _id }, commentVisible } = this.state;
+    if (!commentVisible) {
+      const comments = await http.GET(`/project/${_id}/comment`);
+      this.setState({ ...this.state, comments, commentVisible: true });
+    } else {
+      this.setState({ ...this.state, commentVisible: false });
+    }
+  }
+
+  async putComment() {
+    const { work: { _id }, comment } = this.state;
+    const comments = await http.PUT(`/project/${_id}/comment`, { text: comment });
+    this.setState({ ...this.state, comments });
+  }
+
   render() {
     const {
-      popupVisible,
-      work: { _id, title, authors, category, likes }
+      voteVisible,
+      infoVisible,
+      commentVisible,
+      comments = [],
+      work: {
+        _id, title, authors, category, likes, description,
+        image = `https://api.thecatapi.com/v1/images/search?category_ids=${Math.floor(Math.random() * 6) + 1}&format=src&mime_types=image/gif&api_key=71160d68-1a0e-4b9f-971f-ca1020ba4bce`
+      }
     } = this.state;
-    const { image } = this.props;
 
     const likesStatus = _.isEmpty(likes) ? (
       <div />
     ) : (
-      <p>
-        Liked by {likes[0]} and {likes.length} others
-      </p>
-    );
+        <Button className="likeStatus">
+          Liked by {likes[0]} {likes.length > 1 ? `and ${likes.length - 1} others` : ""}
+        </Button>
+      );
+
+    const likedByMe = likes.indexOf(getMyAlias()) !== -1;
 
     return (
       <Card
@@ -65,7 +87,7 @@ export default class extends Component {
       >
         <Media>
           <img src={image} alt={title} />
-          <MediaOverlay>
+          <MediaOverlay onClick={() => this.setState({ ...this.state, infoVisible: true })}>
             <CardTitle
               title={title}
               subtitle={`by ${authors[0]} +${authors.length}`}
@@ -77,51 +99,67 @@ export default class extends Component {
           </MediaOverlay>
         </Media>
         {likesStatus}
-        <CardActions expander>
+        <CardActions>
           <Button
-            className="md-cell-left"
-            icon
-            onClick={() => this.setState({ ...this.state, popupVisible: true })}
-          >
-            how_to_vote
-          </Button>
-          <Button
-            icon
-            className="md-cell-left"
+            className="md-cell--left"
+            secondary={likedByMe}
+            iconBefore={true}
+            iconChildren={likedByMe ? "favorite" : "favorite_border"}
             onClick={() => (async () => this.toggleLike())()}
           >
-            {likes.indexOf(getMyAlias()) === -1
-              ? "favorite_border"
-              : "favorite"}
+            Like
+          </Button>
+          <Button
+            className="md-cell--left"
+            iconBefore={true}
+            iconChildren="comment"
+            onClick={() => (async () => this.toggleComments())()}
+          >
+            Comments
+          </Button>
+          <Button
+            className="md-cell--right"
+            iconBefore={true}
+            iconChildren="how_to_vote"
+            onClick={() => this.setState({ ...this.state, voteVisible: true })}
+          >
+            Vote
           </Button>
         </CardActions>
-        <CardText expandable>
+        <List className="comments">
+          {comments.map((comment, index) => (
+            <ListItem key={index} leftAvatar={
+              <Avatar>{comment.name.charAt(0).toUpperCase()}</Avatar>
+            } primaryText={comment.name} secondaryText={comment.text} threeLines>
+              <Button icon>favorite_border</Button>
+            </ListItem>
+          ))}
+        </List>
+        <CardText>
+          <TextField id="leaveComment" label="Leave your comment"
+            onChange={comment => this.setState({ ...this.state, comment })}
+            inlineIndicator={
+              <Button icon className="text-fields__inline-btn" onClick={() => (async () => this.putComment())()}>send</Button>
+            }>
+
+          </TextField>
+        </CardText>
+        <DialogContainer
+          id="projectInfo"
+          visible={infoVisible}
+          onHide={() => this.setState({ ...this.state, infoVisible: false })}
+        >
           <h2>{title}</h2>
           <subtitle>by {authors.join(" ,")}</subtitle>
           <h3>Category</h3>
           <p>{category}</p>
           <h3>Description</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut
-            eleifend odio. Vivamus quis quam eget augue facilisis laoreet.
-            Aliquam egestas turpis pellentesque cursus porta. Vivamus nisl odio,
-            maximus vel lacinia non, suscipit quis nibh. Sed et lacus tempor,
-            interdum nisl ornare, feugiat arcu. Suspendisse aliquam malesuada
-            dui, in dignissim velit maximus vitae. Cras ac mattis libero. Proin
-            feugiat justo nec nisi sodales, et gravida augue faucibus. Maecenas
-            quis porttitor nunc. Suspendisse congue ipsum arcu, id aliquam ante
-            dignissim non. Donec maximus, sapien in faucibus molestie, eros nisi
-            ornare neque, et vulputate augue velit vel ante. Phasellus rhoncus,
-            elit cursus accumsan viverra, mi lectus dictum elit, non vehicula
-            diam nunc non lectus. Sed elementum, risus eget fermentum accumsan,
-            nunc ante commodo diam, eget pulvinar risus velit eu sapien. Nunc
-            vitae pellentesque nisl.
-          </p>
-        </CardText>
+          <div dangerouslySetInnerHTML={{ __html: description }}></div>
+        </DialogContainer>
         <DialogContainer
           id="confirmVote"
-          visible={popupVisible}
-          onHide={this.hideConfirmPopup}
+          visible={voteVisible}
+          onHide={() => this.setState({ ...this.state, voteVisible: false })}
           actions={[
             <Button flat onClick={this.hideConfirmPopup}>
               Not Now
