@@ -1,7 +1,6 @@
 import "./TopBar.css";
 
 import React from 'react';
-import { Media } from 'react-md';
 
 export default () => (
   <div className="TopBar">
