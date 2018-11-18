@@ -3,7 +3,7 @@ import "./Home.css";
 import _ from "lodash";
 import React, { Component } from "react";
 import ProjectCard from "./ProjectCard";
-import { Avatar, Chip, Autocomplete } from "react-md";
+import { DialogContainer, Avatar, Chip, Autocomplete } from "react-md";
 import http from "./fetch";
 import TopBar from "./TopBar";
 
@@ -52,7 +52,7 @@ export default class extends Component {
   }
 
   render() {
-    const { selectedStates, filteredStates, projects } = this.state;
+    const { selectedStates, filteredStates, projects, projectInfo } = this.state;
 
     if (projects === undefined) {
       return <div className="Home-intro">Loading...</div>;
@@ -64,8 +64,8 @@ export default class extends Component {
             filters.some(data => data.filter(work))
           )
         )
-        .map((work, index) => (
-          <ProjectCard work={work} />
+        .map((work) => (
+          <ProjectCard work={work} showDescription={() => this.setState({ ...this.state, projectInfo: work })} />
         ));
       const chipItems = selectedStates.map(filter => (
         <Chip
@@ -77,6 +77,18 @@ export default class extends Component {
           avatar={<Avatar>{filter.category}</Avatar>}
         />
       ));
+      const infoPopup = (projectInfo) ? (
+        <div>
+          <h2>{projectInfo.title}</h2>
+          <subtitle>by {projectInfo.authors.join(" ,")}</subtitle>
+          <h3>Category</h3>
+          <p>{projectInfo.category}</p>
+          <h3>Description</h3>
+          <div dangerouslySetInnerHTML={{ __html: projectInfo.description }}></div>
+        </div>
+      ) : (
+        <div />
+      );
 
       return (
         <div className="Home-intro">
@@ -99,6 +111,32 @@ export default class extends Component {
             />
           </div>
           <div className="md-grid">{cards}</div>
+          <DialogContainer
+            id="projectInfo"
+            key="projectInfo"
+            visible={!!projectInfo}
+            onHide={() => this.setState({ ...this.state, projectInfo: undefined })}
+          >
+            {infoPopup}
+          </DialogContainer>
+          {/* <DialogContainer
+            id="confirmVote"
+            key="confirmVote"
+            visible={voteVisible}
+            onHide={() => this.setState({ ...this.state, voteVisible: false })}
+            actions={[
+              <Button flat onClick={this.hideConfirmPopup}>
+                Not Now
+              </Button>,
+              <Button flat primary onClick={this.hideConfirmPopup}>
+                Vote up !!
+              </Button>
+            ]}
+          >
+            <p>
+              Do you want to vote <strong>{title}</strong> up?
+          </p>
+          </DialogContainer> */}
         </div>
       );
     }

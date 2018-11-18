@@ -10,7 +10,6 @@ import {
   MediaOverlay,
   Button,
   CardActions,
-  DialogContainer,
   TextField,
   List,
   ListItem,
@@ -22,11 +21,11 @@ import http from "./fetch";
 export default class extends Component {
   constructor(props) {
     super();
-    this.state = { voteVisible: false, infoVisible: false, commentVisible: false, comments: [], work: props.work };
+    this.state = { commentVisible: false, comments: [], work: props.work };
   }
 
   componentWillReceiveProps(props) {
-    this.setState({ voteVisible: false, infoVisible: false, commentVisible: false, work: props.work });
+    this.setState({ commentVisible: false, work: props.work });
   }
 
   async toggleLike() {
@@ -59,12 +58,11 @@ export default class extends Component {
   }
 
   render() {
+    const { showDescription } = this.props;
     const {
-      voteVisible,
-      infoVisible,
       comments = [],
       work: {
-        _id, title, authors, category, likes, description,
+        _id, title, authors, category, likes, 
         image = `https://api.thecatapi.com/v1/images/search?category_ids=${Math.floor(Math.random() * 6) + 1}&format=src&mime_types=image/gif&api_key=71160d68-1a0e-4b9f-971f-ca1020ba4bce`
       }
     } = this.state;
@@ -86,7 +84,7 @@ export default class extends Component {
       >
         <Media>
           <img src={image} alt={title} />
-          <MediaOverlay onClick={() => this.setState({ ...this.state, infoVisible: true })}>
+          <MediaOverlay onClick={showDescription}>
             <CardTitle
               title={title}
               subtitle={`by ${authors[0]} +${authors.length}`}
@@ -143,35 +141,6 @@ export default class extends Component {
 
           </TextField>
         </CardText>
-        <DialogContainer
-          id="projectInfo"
-          visible={infoVisible}
-          onHide={() => this.setState({ ...this.state, infoVisible: false })}
-        >
-          <h2>{title}</h2>
-          <subtitle>by {authors.join(" ,")}</subtitle>
-          <h3>Category</h3>
-          <p>{category}</p>
-          <h3>Description</h3>
-          <div dangerouslySetInnerHTML={{ __html: description }}></div>
-        </DialogContainer>
-        <DialogContainer
-          id="confirmVote"
-          visible={voteVisible}
-          onHide={() => this.setState({ ...this.state, voteVisible: false })}
-          actions={[
-            <Button flat onClick={this.hideConfirmPopup}>
-              Not Now
-            </Button>,
-            <Button flat primary onClick={this.hideConfirmPopup}>
-              Vote up !!
-            </Button>
-          ]}
-        >
-          <p>
-            Do you want to vote <strong>{title}</strong> up?
-          </p>
-        </DialogContainer>
       </Card>
     );
   }
