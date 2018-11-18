@@ -13,12 +13,16 @@ import CSSTransitionGroup from "react-transition-group/CSSTransition";
 import { Link, Route, Switch, Redirect } from "react-router-dom";
 import Home from "./Home";
 import About from "./About";
+import Notice from "./Notice";
+import Dashboard from "./Dashboard";
 import SideMenu from "./SideMenu";
 import { getChipName } from "./user";
 
 const Navs = [
   { to: "/about", label: "About", icon: "info" },
-  { to: "/home", label: "Participants", icon: "home" }
+  { to: "/notice", label: "Notice", icon: "assignment" },
+  { to: "/home", label: "EA Game Jam Candidates", icon: "subscriptions" },
+  { to: "/dashboard", label: "Dashboard", icon: "bar_chart" }
 ];
 
 export default class extends Component {
@@ -96,10 +100,10 @@ export default class extends Component {
               />
             </Badge>
           }
-          drawerTitle={`EA GameJam 2018`}
-          mobileDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY_MINI}
-          tabletDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT_MINI}
-          desktopDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT_MINI}
+          drawerTitle={`EA Game Jam Online`}
+          mobileDrawerType={NavigationDrawer.DrawerTypes.TEMPORARY}
+          tabletDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT}
+          desktopDrawerType={NavigationDrawer.DrawerTypes.PERSISTENT}
           toolbarTitle={nav.label}
           contentId="main-content"
           contentClassName="md-grid"
@@ -112,8 +116,10 @@ export default class extends Component {
             className="md-toolbar-relative md-grid"
           >
             <Switch key={nav.to}>
-              <Route path="/home" component={Home} />
               <Route path="/about" component={About} />
+              <Route path="/notice" component={Notice} />
+              <Route path="/home" component={Home} />
+              <Route path="/dashboard" component={Dashboard} />
               <Redirect from="/" exact to="/about" />
             </Switch>
           </CSSTransitionGroup>

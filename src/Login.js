@@ -1,9 +1,9 @@
+import "./Login.css";
+
 import md5 from "crypto-js/md5";
 import React, { Component } from "react";
 import { Button, TextField, CardText } from "react-md";
 import { login, signup } from "./user";
-
-import "./Login.css";
 
 export default class extends Component {
   constructor(props) {

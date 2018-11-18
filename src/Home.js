@@ -5,27 +5,7 @@ import React, { Component } from "react";
 import ProjectCard from "./ProjectCard";
 import { Avatar, Chip, Autocomplete } from "react-md";
 import http from "./fetch";
-
-// const WorksData = [
-//   { title: 'Dragon Age: Castles', authors: ['Armando Antonnioni', 'Jethro Aquino', 'Ryan Ackert'], category: 'New IP' },
-//   { title: 'Hippo Tutu', authors: ['Jayme Kielo', 'Steven Gosling'], category: 'New IP' },
-//   { title: 'Pawstruck', authors: ['Tim Wang', 'Alvin Kwok', 'Alex Kolakowsk', 'Andrea Ma'], category: 'New IP' },
-//   { title: 'Patch 11', authors: ['Daniel Forero', 'Cory Bailey', 'Gavin Card', 'Ross Baker', 'Holly Babaran'], category: 'New Feature' },
-//   { title: 'REAplay', authors: ['Krista Parham', 'Will Wang', 'Dave Mcansh'], category: 'New Feature' },
-//   { title: 'bEA', authors: ['Euphemia Wong', 'Sean Brouwer'], category: 'New Feature' },
-//   { title: 'Star Wars: Gloom Walkers', authors: ['Jeremiah de Groot'], category: 'New Feature' },
-//   { title: 'HUT Live Draft', authors: ['Josh Threlfall', 'Christopher Anderson', 'Aleksander Lebada', 'Craig Penner'], category: 'New Feature' },
-//   { title: 'Star Wars: Underworld', authors: ['Alon Mizrahi', 'Brian Vidovic'], category: 'New Feature' },
-//   { title: 'Birdseye', authors: ['Leo Teng', 'Patrick C Lawrence', 'Stanislav Folov', 'Sohrab Zabetian'], category: 'New Feature' },
-// ];
-
-// const ChipsData = [
-//   ..._.flatMap(WorksData, work => [
-//     { category: 'T', label: `Title: ${work.title}`, filter: item => item.title === work.title },
-//     ...work.authors.map(author => ({ category: 'A', label: `Author: ${author}`, filter: item => _.includes(item.authors, author) }))
-//   ]),
-//   ..._.keys(_.groupBy(WorksData, 'category')).map(type => ({ category: 'C', label: `Category: ${type}`, filter: item => item.type === type }))
-// ];
+import TopBar from "./TopBar";
 
 export default class extends Component {
   state = { selectedStates: [], filteredStates: [] };
@@ -100,6 +80,7 @@ export default class extends Component {
 
       return (
         <div className="Home-intro">
+          <TopBar />
           <div className="Home-filter">
             {chipItems}
             <Autocomplete

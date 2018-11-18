@@ -1,42 +1,32 @@
 import "./About.css";
 
-import React from 'react';
-import { Media } from 'react-md';
+import React from "react";
+import { Card, CardText, List, ListItem, FontIcon } from "react-md";
+import TopBar from "./TopBar";
 
 export default () => (
   <div className="About">
-    <Media forceAspect={false} style={({ paddingBottom: "20%" })}>
-      <img src="topbar.png" alt="EA GameJam 2018" />
-    </Media>
-    <h3>GAME JAM 2018 KICK-OFF IS HERE!</h3>
-    <p>
-      It's time! You are invited to the official Game Jam 2018 Kick-off!
-    </p>
-    <p>
-      Come on down to the Bigger Picture at 3PM on Wednesday, November 14th to officially kick off the 2018 Game Jam at EAV! The Game Jam Leadership team will walk all participants through science fair logistics, table assignments, tips and tricks, judging criteria and much more! We will also have Bryan Hayes, UFC Creative Director, presenting EA Player Segmentation research which will assist you in finding a player motivation for your creations!
-    </p>
-    <p>
-      <strong>There will also be Official Game Jam 2018 SWAG!!!</strong>
-    </p>
-    <p>
-      If you have any questions, please email us at <a href="mailto:GameJamLeadership@ea.com">GameJamLeadership@ea.com</a> or leave a question in the Slack channel.
-    </p>    
-    <h3>Game Jam 2018 Dates:</h3>
-    <dl>
-      <dt>November 14th</dt>
-      <dd>Kick off Meeting for all registered Game Jammers</dd>
-      <dt>November 15-16th</dt>
-      <dd>Teams work on their ideas and projects</dd>
-      <dt>November 19th</dt>
-      <dd>Teams set up their presentations</dd>
-      <dt>November 20th</dt>
-      <dd>Studio-wide "science fair" event</dd>
-      <dt>December 5th</dt>
-      <dd>Final Presentations to Judges</dd>
-    </dl>
-    <p>
-      Thanks,<br />
-      The Game Jam Leadership Team
-    </p>
+    <TopBar />
+    <Card className="AboutCard">
+      <CardText>
+        <h3>About us</h3>
+        <p>Welcome to <strong>EA Game Jam Online</strong>!</p>
+        <p>You can traverse all the project via web as well as giving like, leaving comments, and sharing dashboard having "How many likes each project has?" or "Who is hyped." during Science Fair. My desk will expose the dashboard all the time.</p>
+        <h4>Menu</h4>
+        <p>Click <FontIcon key="menu">menu</FontIcon> on upper left of screen to start the adventure !</p>
+        <dl>
+          <dt>About</dt><dd>This page</dd>
+          <dt>Notice</dt><dd>The announcements from EA Game Jam Leadership Commitee</dd>
+          <dt>EA Game Jam Candidates</dt><dd>Traverse all the awesome projects!</dd>
+          <dt>Dashboard</dt><dd>Check it out the statistic of EA Game Jam Projects</dd>
+        </dl>
+        <p>Share your feeling and feedback. Feel free to reach me out!</p>
+        <List>
+          <ListItem primaryText="duheo@ea.com" leftIcon={
+            <FontIcon key="email">email</FontIcon>
+          } />
+        </List>
+      </CardText>
+    </Card>
   </div>
-);
+)

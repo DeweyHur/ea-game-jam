@@ -62,7 +62,6 @@ export default class extends Component {
     const {
       voteVisible,
       infoVisible,
-      commentVisible,
       comments = [],
       work: {
         _id, title, authors, category, likes, description,
