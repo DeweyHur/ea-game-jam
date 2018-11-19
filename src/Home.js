@@ -104,9 +104,17 @@ export default class extends Component {
         } = projectInfo;
         canVoteHere = canVoteHere && getMe().votes.indexOf(_id) === -1;
         let askToVote = canVoteHere ? (
-          <p>Do you want to vote to <strong>{title}</strong>? {getMyRemainingVoteCount()} tickets left.</p>
+          <Card>
+            <CardText>
+              <p>Do you want to vote to <strong>{title}</strong>? {getMyRemainingVoteCount()} tickets left.</p>
+            </CardText>
+          </Card>
         ) : (
-          <p>You already vote here.</p>
+          <Card>
+            <CardText>
+              <p>You already vote here.</p>
+              </CardText>
+          </Card>
         );
         infoPopup = (
           <Card>

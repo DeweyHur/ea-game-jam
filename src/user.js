@@ -53,7 +53,7 @@ export function getChipName() {
 }
 
 export function getMyRemainingVoteCount() {
-  if (me) {
+  if (me && me.votes) {
     return 3 - me.votes.length;
   } else {
     return 0;

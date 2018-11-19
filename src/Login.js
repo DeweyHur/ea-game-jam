@@ -2,13 +2,13 @@ import "./Login.css";
 
 import md5 from "crypto-js/md5";
 import React, { Component } from "react";
-import { Button, TextField, CardText } from "react-md";
+import { Button, TextField, CardText, Card } from "react-md";
 import { login, signup } from "./user";
 
 export default class extends Component {
   constructor(props) {
     super(props);
-    this.state = { signup: false, id: "", name: "" };
+    this.state = { signingUp: true, id: "", name: "" };
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -29,6 +29,12 @@ export default class extends Component {
 
     const content = signingUp ? (
       <div id="floating-form" className="Login-form">
+        <Card className="caution">
+          <CardText>
+            ⓘ If it's your first time here, please SIGN UP first with your EA
+            Account! ⓘ
+          </CardText>
+        </Card>
         <Button
           flat
           primary
@@ -38,7 +44,7 @@ export default class extends Component {
           id="sign-up-button"
           onClick={() => this.setState({ ...this.state, signingUp: false })}
         >
-          Sign up?
+          Do you want to log in?
         </Button>
         <TextField
           required
@@ -78,10 +84,12 @@ export default class extends Component {
       </div>
     ) : (
       <div id="floating-form" className="Login-form">
-        <CardText>
-          ⓘ If it's your first time here, please SIGN UP first with your EA
-          Account, click below button! ⓘ
-        </CardText>
+        <Card>
+          <CardText>
+            ⓘ If it's your first time here, please SIGN UP first with your EA
+            Account, click below button! ⓘ
+          </CardText>
+        </Card>
         <Button
           flat
           primary
@@ -92,7 +100,7 @@ export default class extends Component {
             this.setState({ ...this.state, signingUp: true });
           }}
         >
-          Sign up?
+          Back to sign up?
         </Button>
         <TextField
           required
