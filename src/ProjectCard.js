@@ -59,14 +59,15 @@ export default class extends Component {
 
   async putComment() {
     const { work: { _id }, comment } = this.state;
-    const comments = await http.PUT(`/project/${_id}/comment`, { text: comment });
-    this.setState({ ...this.state, commentVisible: true, comments });
+    const comments = await http.PUT(`/project/${_id}/comment`, { text: comment });    
+    this.setState({ ...this.state, commentVisible: true, comments, comment: "" });
   }
 
   render() {
     const { showDescription } = this.props;
     const {
       comments = [],
+      comment,
       commentVisible,
       work: {
         _id, title, authors, category, likes,
@@ -137,7 +138,7 @@ export default class extends Component {
             className="md-cell--right"
             iconBefore={true}
             iconChildren="how_to_vote"
-            onClick={() => this.setState({ ...this.state, voteVisible: true })}
+            onClick={showDescription}
           >
             Vote
           </Button>
@@ -146,6 +147,7 @@ export default class extends Component {
         <CardText>
           <TextField id="leaveComment" label="Leave your comment"
             onChange={comment => this.setState({ ...this.state, comment })}
+            value={comment}
             inlineIndicator={
               <Button icon className="text-fields__inline-btn" onClick={() => (async () => this.putComment())()}>send</Button>
             }>

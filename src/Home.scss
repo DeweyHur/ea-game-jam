@@ -1,5 +1,10 @@
 .Home {
   text-align: center;
+
+  #projectInfo {
+    width: 100%;
+    max-width: 600px;
+  }
 }
 
 .Home-header {
@@ -25,3 +30,5 @@
     margin-right: 5px;
   }
 }
+
+

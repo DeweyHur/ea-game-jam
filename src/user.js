@@ -1,3 +1,4 @@
+import _ from "lodash";
 import http from "./fetch";
 
 let me;
@@ -17,7 +18,11 @@ export async function logout() {
   await http.POST("/user/logout");
 }
 
-export function getMe() {
+export function getMe() {  
+  if (!_.isEmpty(me)) {
+    return me;
+  }
+  me = JSON.parse(window.sessionStorage.getItem("EAGameJamUser"));
   return me;
 }
 
@@ -44,6 +49,34 @@ export function getChipName() {
       .toUpperCase();
   } else {
     return null;
+  }
+}
+
+export function getMyRemainingVoteCount() {
+  if (me) {
+    return 3 - me.votes.length;
+  } else {
+    return 0;
+  }
+}
+
+export async function getMyVotes() {
+  if (me) {
+    if (me.voteTitles) {
+      return me.voteTitles;
+
+    } else if (!_.isEmpty(me.votes)) {
+      const projects = await Promise.all(me.votes.map(vote => http.GET(`/project/${vote.postid}`)));
+      me.voteTitles = projects.map(project => project.title);
+      return me.voteTitles;
+    }
+  }
+  return [];
+}
+
+export function invalidateVotes() {
+  if (me) {
+    delete me.voteTitles;
   }
 }
 

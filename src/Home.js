@@ -3,9 +3,10 @@ import "./Home.css";
 import _ from "lodash";
 import React, { Component } from "react";
 import ProjectCard from "./ProjectCard";
-import { DialogContainer, Avatar, Chip, Autocomplete } from "react-md";
+import { Button, Card, CardText, DialogContainer, Avatar, Chip, Autocomplete, Media } from "react-md";
 import http from "./fetch";
 import TopBar from "./TopBar";
+import { getMe, getMyRemainingVoteCount, invalidateVotes } from "./user";
 
 export default class extends Component {
   state = { selectedStates: [], filteredStates: [] };
@@ -17,6 +18,11 @@ export default class extends Component {
       filteredStates: _.without(this.state.chips, selectedStates)
     });
   };
+
+  constructor () {
+    super ();
+    this.hideProjectInfo = this.hideProjectInfo.bind(this);
+  }
 
   async componentWillMount() {
     this.reload();
@@ -51,6 +57,17 @@ export default class extends Component {
     }
   }
 
+  hideProjectInfo() {
+    this.setState({ ...this.state, projectInfo: undefined });
+  }
+
+  async voteUp(projectInfo) {
+    const { _id } = projectInfo;
+    await http.PUT(`/project/${_id}/vote`);
+    invalidateVotes();
+    this.hideProjectInfo();
+  }
+
   render() {
     const { selectedStates, filteredStates, projects, projectInfo } = this.state;
 
@@ -77,18 +94,37 @@ export default class extends Component {
           avatar={<Avatar>{filter.category}</Avatar>}
         />
       ));
-      const infoPopup = (projectInfo) ? (
-        <div>
-          <h2>{projectInfo.title}</h2>
-          <address>by {projectInfo.authors.join(" ,")}</address>
-          <h3>Category</h3>
-          <p>{projectInfo.category}</p>
-          <h3>Description</h3>
-          <div dangerouslySetInnerHTML={{ __html: projectInfo.description }}></div>
-        </div>
-      ) : (
-        <div />
-      );
+      
+      let canVoteHere = getMyRemainingVoteCount() > 0;
+      let infoPopup = (<div />);
+      if (projectInfo) {
+        const {
+          title, authors, category, description, _id,
+          image = `https://api.thecatapi.com/v1/images/search?category_ids=${Math.floor(Math.random() * 6) + 1}&format=src&mime_types=image/gif&api_key=71160d68-1a0e-4b9f-971f-ca1020ba4bce`
+        } = projectInfo;
+        canVoteHere = canVoteHere && getMe().votes.indexOf(_id) === -1;
+        let askToVote = canVoteHere ? (
+          <p>Do you want to vote to <strong>{title}</strong>? {getMyRemainingVoteCount()} tickets left.</p>
+        ) : (
+          <p>You already vote here.</p>
+        );
+        infoPopup = (
+          <Card>
+            <CardText>
+              <Media>
+                <img src={image} alt={title} />
+              </Media>
+              <h2>{title}</h2>
+              <address>by {authors.join(", ")}</address>
+              <h3>Category</h3>
+              <p>{category}</p>
+              <h3>Description</h3>
+              <div dangerouslySetInnerHTML={{ __html: description }}></div>
+              { askToVote }
+            </CardText>
+          </Card>
+        );
+      }
 
       return (
         <div className="Home-intro">
@@ -114,29 +150,19 @@ export default class extends Component {
           <DialogContainer
             id="projectInfo"
             visible={!!projectInfo}
-            onHide={() => this.setState({ ...this.state, projectInfo: undefined })}
+            onHide={this.hideProjectInfo}
             initialFocus="projectInfo"
+            actions={canVoteHere ? [
+              <Button flat onClick={this.hideProjectInfo}>
+                Not Now
+              </Button>,
+              <Button flat primary onClick={() => (async () => this.voteUp(projectInfo))()}>
+                Vote up !!
+              </Button>
+            ] : []}            
           >
             {infoPopup}
           </DialogContainer>
-          {/* <DialogContainer
-            id="confirmVote"
-            key="confirmVote"
-            visible={voteVisible}
-            onHide={() => this.setState({ ...this.state, voteVisible: false })}
-            actions={[
-              <Button flat onClick={this.hideConfirmPopup}>
-                Not Now
-              </Button>,
-              <Button flat primary onClick={this.hideConfirmPopup}>
-                Vote up !!
-              </Button>
-            ]}
-          >
-            <p>
-              Do you want to vote <strong>{title}</strong> up?
-          </p>
-          </DialogContainer> */}
         </div>
       );
     }

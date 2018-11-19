@@ -9,9 +9,18 @@ import {
   IconSeparator,
   Divider
 } from "react-md";
-import { logout, getName, getChipName } from "./user";
+import { logout, getName, getChipName, getMyVotes, getMyRemainingVoteCount } from "./user";
 
 export default class extends Component {
+  state = { votes: [] };
+
+  componentDidMount() {
+    (async () => {
+      const projects = await getMyVotes();
+      this.setState({ ...this.state, votes: projects.map(vote => vote.title) });
+    })();
+  }
+
   render() {
     const { visible, reload } = this.props;
 
@@ -35,9 +44,8 @@ export default class extends Component {
               </Avatar>
             </IconSeparator>
             <Divider />
-            <p>Welcome, {getName()}.</p>
             <p>
-              You have <strong>3</strong> votes left.
+              You have <strong>{getMyRemainingVoteCount()}</strong> votes left.
             </p>
             <Button
               flat
@@ -45,7 +53,7 @@ export default class extends Component {
               type="submit"
               onClick={() => {
                 (async () => {
-                  await logout();
+                  try { await logout(); } catch (e) {}
                   reload();
                 })();
               }}

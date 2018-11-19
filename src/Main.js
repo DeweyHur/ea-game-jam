@@ -16,7 +16,7 @@ import About from "./About";
 import Notice from "./Notice";
 import Dashboard from "./Dashboard";
 import SideMenu from "./SideMenu";
-import { getChipName } from "./user";
+import { getChipName, getMyRemainingVoteCount } from "./user";
 
 const Navs = [
   { to: "/about", label: "About", icon: "info" },
@@ -83,7 +83,7 @@ export default class extends Component {
             <Badge
               secondary
               aria-haspopup
-              badgeContent={3}
+              badgeContent={getMyRemainingVoteCount()}
               id="account-badge-toggle"
             >
               <Button
