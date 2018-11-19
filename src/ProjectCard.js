@@ -51,18 +51,25 @@ export default class extends Component {
     }
   }
 
+  async deleteComment() {
+    const { work: { _id } } = this.state;
+    const comments = await http.DELETE(`/project/${_id}/comment`);
+    this.setState({ ...this.state, commentVisible: true, comments });
+  }
+
   async putComment() {
     const { work: { _id }, comment } = this.state;
     const comments = await http.PUT(`/project/${_id}/comment`, { text: comment });
-    this.setState({ ...this.state, comments });
+    this.setState({ ...this.state, commentVisible: true, comments });
   }
 
   render() {
     const { showDescription } = this.props;
     const {
       comments = [],
+      commentVisible,
       work: {
-        _id, title, authors, category, likes, 
+        _id, title, authors, category, likes,
         image = `https://api.thecatapi.com/v1/images/search?category_ids=${Math.floor(Math.random() * 6) + 1}&format=src&mime_types=image/gif&api_key=71160d68-1a0e-4b9f-971f-ca1020ba4bce`
       }
     } = this.state;
@@ -76,6 +83,17 @@ export default class extends Component {
       );
 
     const likedByMe = likes.indexOf(getMyAlias()) !== -1;
+    const commentsArea = (commentVisible) ? (
+      <List className="comments">
+        {comments.map((comment, index) => (
+          <ListItem key={index} leftAvatar={
+            <Avatar>{comment.name.charAt(0).toUpperCase()}</Avatar>
+          } primaryText={comment.name} secondaryText={comment.text} threeLines>
+            <Button icon onClick={() => (async () => this.deleteComment())()}>delete_forever</Button>
+          </ListItem>
+        ))}
+      </List>
+    ) : (<div />);
 
     return (
       <Card
@@ -108,11 +126,12 @@ export default class extends Component {
           </Button>
           <Button
             className="md-cell--left"
+            primary={commentVisible}
             iconBefore={true}
             iconChildren="comment"
             onClick={() => (async () => this.toggleComments())()}
           >
-            Comments
+            {(commentVisible) ? "Hide comments" : "Load comments"}
           </Button>
           <Button
             className="md-cell--right"
@@ -123,15 +142,7 @@ export default class extends Component {
             Vote
           </Button>
         </CardActions>
-        <List className="comments">
-          {comments.map((comment, index) => (
-            <ListItem key={index} leftAvatar={
-              <Avatar>{comment.name.charAt(0).toUpperCase()}</Avatar>
-            } primaryText={comment.name} secondaryText={comment.text} threeLines>
-              <Button icon>favorite_border</Button>
-            </ListItem>
-          ))}
-        </List>
+        { commentsArea }
         <CardText>
           <TextField id="leaveComment" label="Leave your comment"
             onChange={comment => this.setState({ ...this.state, comment })}

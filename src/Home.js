@@ -64,7 +64,7 @@ export default class extends Component {
             filters.some(data => data.filter(work))
           )
         )
-        .map((work) => (
+        .map(work => (
           <ProjectCard work={work} showDescription={() => this.setState({ ...this.state, projectInfo: work })} />
         ));
       const chipItems = selectedStates.map(filter => (
@@ -80,7 +80,7 @@ export default class extends Component {
       const infoPopup = (projectInfo) ? (
         <div>
           <h2>{projectInfo.title}</h2>
-          <subtitle>by {projectInfo.authors.join(" ,")}</subtitle>
+          <address>by {projectInfo.authors.join(" ,")}</address>
           <h3>Category</h3>
           <p>{projectInfo.category}</p>
           <h3>Description</h3>
@@ -113,9 +113,9 @@ export default class extends Component {
           <div className="md-grid">{cards}</div>
           <DialogContainer
             id="projectInfo"
-            key="projectInfo"
             visible={!!projectInfo}
             onHide={() => this.setState({ ...this.state, projectInfo: undefined })}
+            initialFocus="projectInfo"
           >
             {infoPopup}
           </DialogContainer>
