@@ -15,7 +15,7 @@ import {
   ListItem,
   Avatar
 } from "react-md";
-import { getMyAlias } from "./user";
+import { getMyAlias, getMe } from "./user";
 import http from "./fetch";
 
 export default class extends Component {
@@ -51,9 +51,9 @@ export default class extends Component {
     }
   }
 
-  async deleteComment() {
+  async deleteComment(commentid) {
     const { work: { _id } } = this.state;
-    const comments = await http.DELETE(`/project/${_id}/comment`);
+    const comments = await http.DELETE(`/project/${_id}/comment/${commentid}`);
     this.setState({ ...this.state, commentVisible: true, comments });
   }
 
@@ -74,6 +74,9 @@ export default class extends Component {
         image = `https://api.thecatapi.com/v1/images/search?category_ids=${Math.floor(Math.random() * 6) + 1}&format=src&mime_types=image/gif&api_key=71160d68-1a0e-4b9f-971f-ca1020ba4bce`
       }
     } = this.state;
+    const voteDisabled = _.find(getMe().votes, vote => {
+      return vote.postid === _id;
+    }) !== undefined;
 
     const likesStatus = _.isEmpty(likes) ? (
       <div />
@@ -86,13 +89,18 @@ export default class extends Component {
     const likedByMe = likes.indexOf(getMyAlias()) !== -1;
     const commentsArea = (commentVisible) ? (
       <List className="comments">
-        {comments.map((comment, index) => (
-          <ListItem key={index} leftAvatar={
-            <Avatar>{comment.name.charAt(0).toUpperCase()}</Avatar>
-          } primaryText={comment.name} secondaryText={comment.text} threeLines>
-            <Button icon onClick={() => (async () => this.deleteComment())()}>delete_forever</Button>
-          </ListItem>
-        ))}
+        {comments.map((comment, index) => {
+          const deleteButton = (getMyAlias() === comment.name) ? (
+            <Button icon onClick={() => (async () => this.deleteComment(comment._id))()}>delete_forever</Button>
+          ) : <div />;
+          return (
+            <ListItem key={index} leftAvatar={
+              <Avatar>{comment.name.charAt(0).toUpperCase()}</Avatar>
+            } primaryText={comment.name} secondaryText={comment.text} threeLines>
+              {deleteButton}
+            </ListItem>
+          );
+        })}
       </List>
     ) : (<div />);
 
@@ -136,6 +144,7 @@ export default class extends Component {
           </Button>
           <Button
             className="md-cell--right"
+            disabled={voteDisabled}
             iconBefore={true}
             iconChildren="how_to_vote"
             onClick={showDescription}
