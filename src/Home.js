@@ -3,13 +3,13 @@ import "./Home.css";
 import _ from "lodash";
 import React, { Component } from "react";
 import ProjectCard from "./ProjectCard";
-import { Button, Card, CardText, DialogContainer, Avatar, Chip, Autocomplete, Media } from "react-md";
+import { Subheader, Button, Card, CardText, DialogContainer, Avatar, Chip, Autocomplete, Media, List, ListItem } from "react-md";
 import http from "./fetch";
 import TopBar from "./TopBar";
 import { canVote, getMyRemainingVoteCount, invalidateVotes } from "./user";
 
 export default class extends Component {
-  state = { selectedStates: [], filteredStates: [] };
+  state = { infoVisible: false, likesVisible: false, selectedStates: [], filteredStates: [] };
 
   setNextState = selectedStates => {
     this.setState({
@@ -19,9 +19,10 @@ export default class extends Component {
     });
   };
 
-  constructor () {
-    super ();
+  constructor() {
+    super();
     this.hideProjectInfo = this.hideProjectInfo.bind(this);
+    this.hideLikes = this.hideLikes.bind(this);
   }
 
   async componentWillMount() {
@@ -58,7 +59,11 @@ export default class extends Component {
   }
 
   hideProjectInfo() {
-    this.setState({ ...this.state, projectInfo: undefined });
+    this.setState({ ...this.state, infoVisible: false });
+  }
+
+  hideLikes() {
+    this.setState({ ...this.state, likesVisible: false });
   }
 
   async voteUp(projectInfo) {
@@ -69,7 +74,7 @@ export default class extends Component {
   }
 
   render() {
-    const { selectedStates, filteredStates, projects, projectInfo } = this.state;
+    const { selectedStates, filteredStates, projects, projectInfo, infoVisible, likesVisible } = this.state;
 
     if (projects === undefined) {
       return <div className="Home-intro">Loading...</div>;
@@ -82,7 +87,11 @@ export default class extends Component {
           )
         )
         .map(work => (
-          <ProjectCard work={work} showDescription={() => this.setState({ ...this.state, projectInfo: work })} />
+          <ProjectCard
+            work={work}
+            showDescription={() => this.setState({ ...this.state, projectInfo: work, infoVisible: true })}
+            showLikes={() => this.setState({ ...this.state, projectInfo: work, likesVisible: true })}
+          />
         ));
       const chipItems = selectedStates.map(filter => (
         <Chip
@@ -94,7 +103,7 @@ export default class extends Component {
           avatar={<Avatar>{filter.category}</Avatar>}
         />
       ));
-      
+
       let canVoteHere = false;
       let infoPopup = (<div />);
       if (projectInfo) {
@@ -110,12 +119,12 @@ export default class extends Component {
             </CardText>
           </Card>
         ) : (
-          <Card>
-            <CardText>
-              <p>You already vote here.</p>
+            <Card>
+              <CardText>
+                <p>You already vote here.</p>
               </CardText>
-          </Card>
-        );
+            </Card>
+          );
         infoPopup = (
           <Card>
             <CardText>
@@ -128,11 +137,12 @@ export default class extends Component {
               <p>{category}</p>
               <h3>Description</h3>
               <div dangerouslySetInnerHTML={{ __html: description }}></div>
-              { askToVote }
+              {askToVote}
             </CardText>
           </Card>
         );
       }
+      const likes = projectInfo ? projectInfo.likes : [];
 
       return (
         <div className="Home-intro">
@@ -157,7 +167,7 @@ export default class extends Component {
           <div className="md-grid">{cards}</div>
           <DialogContainer
             id="projectInfo"
-            visible={!!projectInfo}
+            visible={infoVisible}
             onHide={this.hideProjectInfo}
             initialFocus="projectInfo"
             actions={canVoteHere ? [
@@ -167,9 +177,22 @@ export default class extends Component {
               <Button flat primary onClick={() => (async () => this.voteUp(projectInfo))()}>
                 Vote up !!
               </Button>
-            ] : []}            
+            ] : []}
           >
             {infoPopup}
+          </DialogContainer>
+          <DialogContainer
+            id="likes"
+            visible={likesVisible}
+            onHide={this.hideLikes}
+            initialFocus="likes"
+          >
+            <List>
+              <Subheader primaryText="People who like this" secondary />
+              {likes.map(like => (
+                <ListItem key={like.alias} primaryText={like.name} />
+              ))}
+            </List>
           </DialogContainer>
         </div>
       );

@@ -64,7 +64,7 @@ export default class extends Component {
   }
 
   render() {
-    const { showDescription } = this.props;
+    const { showDescription, showLikes } = this.props;
     const {
       comments = [],
       comment,
@@ -78,12 +78,12 @@ export default class extends Component {
     const likesStatus = _.isEmpty(likes) ? (
       <div />
     ) : (
-        <Button className="likeStatus">
-          Liked by {likes[0]} {likes.length > 1 ? `and ${likes.length - 1} others` : ""}
+        <Button className="likeStatus" onClick={showLikes}>
+          Liked by {likes[0].name} {likes.length > 1 ? `and ${likes.length - 1} others` : ""}
         </Button>
       );
 
-    const likedByMe = likes.indexOf(getMyAlias()) !== -1;
+    const likedByMe = likes.some(like => like.alias === getMyAlias());
     const commentsArea = (commentVisible) ? (
       <List className="comments">
         {comments.map((comment, index) => {
