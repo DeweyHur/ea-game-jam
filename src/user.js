@@ -60,6 +60,12 @@ export function getMyRemainingVoteCount() {
   }
 }
 
+export function canVote(_id) {
+  return getMyRemainingVoteCount() > 0 && _.find(getMe().votes, vote => {
+    return vote.postid === _id;
+  }) === undefined;  
+}
+
 export async function getMyVotes() {
   if (me) {
     if (me.voteTitles) {

@@ -19,6 +19,7 @@ export default () => (
           <dt>Notice</dt><dd>The announcements from EA Game Jam Leadership Commitee</dd>
           <dt>EA Game Jam Candidates</dt><dd>Traverse all the awesome projects!</dd>
           <dt>Dashboard</dt><dd>Check it out the statistic of EA Game Jam Projects</dd>
+          <dt>Guestbook</dt><dd>Feel free to leave your feedback!</dd>
         </dl>
         <p>Share your feeling and feedback. Feel free to reach me out!</p>
         <List>

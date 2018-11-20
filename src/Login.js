@@ -31,8 +31,7 @@ export default class extends Component {
       <div id="floating-form" className="Login-form">
         <Card className="caution">
           <CardText>
-            ⓘ If it's your first time here, please SIGN UP first with your EA
-            Account! ⓘ
+            ⓘ If it's your first time here, please SIGN UP first with your EA E-mail address! ⓘ
           </CardText>
         </Card>
         <Button
@@ -86,8 +85,7 @@ export default class extends Component {
       <div id="floating-form" className="Login-form">
         <Card>
           <CardText>
-            ⓘ If it's your first time here, please SIGN UP first with your EA
-            Account, click below button! ⓘ
+            ⓘ If it's your first time here, please SIGN UP first with your EA E-mail address! ⓘ
           </CardText>
         </Card>
         <Button

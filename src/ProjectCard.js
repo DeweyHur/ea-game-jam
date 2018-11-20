@@ -12,11 +12,11 @@ import {
   CardActions,
   TextField,
   List,
-  ListItem,
-  Avatar
+  ListItem
 } from "react-md";
-import { getMyAlias, getMe } from "./user";
+import { getMyAlias, canVote } from "./user";
 import http from "./fetch";
+import { getAvatar } from "./util";
 
 export default class extends Component {
   constructor(props) {
@@ -74,9 +74,6 @@ export default class extends Component {
         image = `https://api.thecatapi.com/v1/images/search?category_ids=${Math.floor(Math.random() * 6) + 1}&format=src&mime_types=image/gif&api_key=71160d68-1a0e-4b9f-971f-ca1020ba4bce`
       }
     } = this.state;
-    const voteDisabled = _.find(getMe().votes, vote => {
-      return vote.postid === _id;
-    }) !== undefined;
 
     const likesStatus = _.isEmpty(likes) ? (
       <div />
@@ -94,9 +91,7 @@ export default class extends Component {
             <Button icon onClick={() => (async () => this.deleteComment(comment._id))()}>delete_forever</Button>
           ) : <div />;
           return (
-            <ListItem key={index} leftAvatar={
-              <Avatar>{comment.name.charAt(0).toUpperCase()}</Avatar>
-            } primaryText={comment.name} secondaryText={comment.text} threeLines>
+            <ListItem key={index} leftAvatar={getAvatar(comment.alias)} primaryText={comment.name} secondaryText={comment.text} threeLines>
               {deleteButton}
             </ListItem>
           );
@@ -114,7 +109,7 @@ export default class extends Component {
           <MediaOverlay onClick={showDescription}>
             <CardTitle
               title={title}
-              subtitle={`by ${authors[0]} +${authors.length}`}
+              subtitle={`by ${authors[0]} ${(authors.length > 1) ? `+${authors.length - 1}` : ""}`}
             >
               <Button className="md-cell--right" flat>
                 {category}
@@ -144,7 +139,7 @@ export default class extends Component {
           </Button>
           <Button
             className="md-cell--right"
-            disabled={voteDisabled}
+            disabled={!canVote(_id)}
             iconBefore={true}
             iconChildren="how_to_vote"
             onClick={showDescription}

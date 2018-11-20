@@ -6,7 +6,7 @@ import ProjectCard from "./ProjectCard";
 import { Button, Card, CardText, DialogContainer, Avatar, Chip, Autocomplete, Media } from "react-md";
 import http from "./fetch";
 import TopBar from "./TopBar";
-import { getMe, getMyRemainingVoteCount, invalidateVotes } from "./user";
+import { canVote, getMyRemainingVoteCount, invalidateVotes } from "./user";
 
 export default class extends Component {
   state = { selectedStates: [], filteredStates: [] };
@@ -95,14 +95,14 @@ export default class extends Component {
         />
       ));
       
-      let canVoteHere = getMyRemainingVoteCount() > 0;
+      let canVoteHere = false;
       let infoPopup = (<div />);
       if (projectInfo) {
         const {
           title, authors, category, description, _id,
           image = `https://api.thecatapi.com/v1/images/search?category_ids=${Math.floor(Math.random() * 6) + 1}&format=src&mime_types=image/gif&api_key=71160d68-1a0e-4b9f-971f-ca1020ba4bce`
         } = projectInfo;
-        canVoteHere = canVoteHere && getMe().votes.indexOf(_id) === -1;
+        canVoteHere = canVote(_id);
         let askToVote = canVoteHere ? (
           <Card>
             <CardText>

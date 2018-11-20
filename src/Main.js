@@ -6,8 +6,7 @@ import {
   ListItem,
   FontIcon,
   NavigationDrawer,
-  Button,
-  Avatar
+  Button
 } from "react-md";
 import CSSTransitionGroup from "react-transition-group/CSSTransition";
 import { Link, Route, Switch, Redirect } from "react-router-dom";
@@ -16,13 +15,16 @@ import About from "./About";
 import Notice from "./Notice";
 import Dashboard from "./Dashboard";
 import SideMenu from "./SideMenu";
-import { getChipName, getMyRemainingVoteCount } from "./user";
+import Guestbook from "./Guestbook";
+import { getMyRemainingVoteCount, getMyAlias } from "./user";
+import { getAvatar } from "./util";
 
 const Navs = [
   { to: "/about", label: "About", icon: "info" },
   { to: "/notice", label: "Notice", icon: "assignment" },
   { to: "/home", label: "EA Game Jam Candidates", icon: "subscriptions" },
-  { to: "/dashboard", label: "Dashboard", icon: "bar_chart" }
+  { to: "/dashboard", label: "Dashboard", icon: "bar_chart" },
+  { to: "/guestbook", label: "Guestbook", icon: "question_answer" }
 ];
 
 export default class extends Component {
@@ -91,7 +93,7 @@ export default class extends Component {
                   this.setState({ ...this.state, visible: !visible })
                 }
               >
-                <Avatar>{getChipName()}</Avatar>
+                {getAvatar(getMyAlias())}
               </Button>
               <SideMenu
                 visible={visible}
@@ -120,6 +122,7 @@ export default class extends Component {
               <Route path="/notice" component={Notice} />
               <Route path="/home" component={Home} />
               <Route path="/dashboard" component={Dashboard} />
+              <Route path="/guestbook" component={Guestbook} />
               <Redirect from="/" exact to="/about" />
             </Switch>
           </CSSTransitionGroup>

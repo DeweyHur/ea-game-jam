@@ -5,11 +5,11 @@ import {
   Collapse,
   Dialog,
   Button,
-  Avatar,
   IconSeparator,
   Divider
 } from "react-md";
-import { logout, getName, getChipName, getMyVotes, getMyRemainingVoteCount } from "./user";
+import { logout, getName, getMyVotes, getMyRemainingVoteCount, getMyAlias } from "./user";
+import { getAvatar } from "./util";
 
 export default class extends Component {
   state = { votes: [] };
@@ -39,9 +39,7 @@ export default class extends Component {
               component="li"
               className="SideMenu-account md-cell md-cell--12"
             >
-              <Avatar random suffix={getName()}>
-                {getChipName()}
-              </Avatar>
+              {getAvatar(getMyAlias())}
             </IconSeparator>
             <Divider />
             <p>
